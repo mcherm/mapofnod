@@ -34,3 +34,16 @@ html, body, #map {
 .leaflet-tooltip.poi-label::before {
   display: none;
 }
+
+/* Description box shown beside a POI icon when it is clicked. */
+.leaflet-tooltip.poi-description {
+  width: max-content;
+  max-width: min(280px, calc(50vw - 40px));
+  padding: 6px 9px;
+  white-space: normal;
+  color: #222;
+  font: 14px/1.4 Georgia, "Times New Roman", serif;
+  cursor: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}

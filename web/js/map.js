@@ -74,7 +74,41 @@
     }
   }
 
+  // A single description box, shared by all POIs. It opens beside the clicked
+  // icon, on whichever side faces the centre of the screen, and closes when
+  // the map is clicked. Clicks inside the box don't reach the map.
+  function descriptionBox(map) {
+    const box = L.tooltip({
+      direction: "auto",
+      offset: [ICON_SIZE / 2 + 12, 0], // leaves room for the pointer arrow
+      interactive: true,
+      className: "poi-description",
+    });
+    let openId = null;
+    map.on("click", () => {
+      map.closeTooltip(box);
+      openId = null;
+    });
+
+    // Opens the box for a POI, or closes it if already open for that POI.
+    return function toggle(id, latLng, text) {
+      if (openId === id) {
+        map.closeTooltip(box);
+        openId = null;
+        return;
+      }
+      const content = document.createElement("div");
+      content.textContent = text;
+      box.setContent(content);
+      map.openTooltip(box, latLng);
+      // As Leaflet does for popups; otherwise the map sees the click and closes it.
+      L.DomEvent.disableClickPropagation(box.getElement());
+      openId = id;
+    };
+  }
+
   function addPois(map, pois) {
+    const toggleDescription = descriptionBox(map);
     for (const poi of pois) {
       const resolved = resolvePoi(poi);
       if (resolved === null) {
@@ -87,7 +121,9 @@
         tooltipAnchor: [0, ICON_SIZE / 2], // bottom edge of the icon
         className: "poi-icon",
       });
-      L.marker(toLatLng(resolved.location), { icon, alt: poi.name })
+      const latLng = toLatLng(resolved.location);
+      L.marker(latLng, { icon, alt: poi.name })
+        .on("click", () => toggleDescription(poi.id, latLng, resolved.description))
         .bindTooltip(poi.name, {
           permanent: true,
           direction: "bottom",
