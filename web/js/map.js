@@ -84,9 +84,10 @@
     return visited;
   }
 
-  // Draws the hex grid as SVG polygons, with unvisited hexes lightly shaded.
-  // Not interactive, so clicks pass through to the map.
-  function addHexGrid(map, hexes, visited) {
+  // Builds the hex grid as SVG polygons, with unvisited hexes lightly shaded.
+  // Not interactive, so clicks pass through to the map. Returns the layer
+  // without adding it: the grid starts hidden, and HexToggle shows it.
+  function hexGrid(hexes, visited) {
     const grid = L.layerGroup();
     for (let col = 0; col < hexes.cols; col++) {
       for (let row = 0; row < hexes.rows; row++) {
@@ -101,8 +102,48 @@
         }).addTo(grid);
       }
     }
-    return grid.addTo(map);
+    return grid;
   }
+
+  // A map control, placed below Leaflet's zoom buttons, that shows and hides
+  // a layer. Its button is drawn as a hexagon.
+  const HexToggle = L.Control.extend({
+    options: { position: "topleft" },
+
+    initialize(layer, options) {
+      L.Util.setOptions(this, options);
+      this._layer = layer;
+    },
+
+    onAdd(map) {
+      const bar = L.DomUtil.create("div", "leaflet-bar");
+      const button = L.DomUtil.create("a", "hex-toggle", bar);
+      button.href = "#";
+      button.role = "button";
+      button.title = "Show or hide the hex grid";
+      button.setAttribute("aria-label", "Hex grid");
+      button.innerHTML =
+        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
+        '<polygon points="1,10 5.5,2.2 14.5,2.2 19,10 14.5,17.8 5.5,17.8" /></svg>';
+      const update = () => {
+        const shown = map.hasLayer(this._layer);
+        button.classList.toggle("off", !shown);
+        button.setAttribute("aria-pressed", String(shown));
+      };
+      L.DomEvent.disableClickPropagation(bar);
+      L.DomEvent.on(button, "click", (e) => {
+        L.DomEvent.preventDefault(e);
+        if (map.hasLayer(this._layer)) {
+          map.removeLayer(this._layer);
+        } else {
+          map.addLayer(this._layer);
+        }
+        update();
+      });
+      update();
+      return bar;
+    },
+  });
 
   // Which view to display, "player" or "gm". Set by the build.
   const VIEW = document.documentElement.dataset.view;
@@ -203,7 +244,8 @@
   ])
     .then(([config, poiData, visitedText]) => {
       const map = buildMap(config);
-      addHexGrid(map, config.hexes, parseVisited(visitedText));
+      const grid = hexGrid(config.hexes, parseVisited(visitedText));
+      new HexToggle(grid).addTo(map);
       addPois(map, poiData.pois);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));

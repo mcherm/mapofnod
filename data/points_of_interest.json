@@ -2,7 +2,7 @@
   "pois": [
     {
       "id": "nod",
-      "name": "Vilage of Nod",
+      "name": "Village of Nod",
       "icon": "village.svg",
       "true_location": [0, 0],
       "rumored_location": [0, 0],

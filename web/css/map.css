@@ -47,3 +47,17 @@ html, body, #map {
   -webkit-user-select: text;
   user-select: text;
 }
+
+/* Hex grid on/off button, below the zoom buttons. */
+.hex-toggle svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.8;
+}
+
+.hex-toggle.off svg {
+  stroke: #aaa;
+}
