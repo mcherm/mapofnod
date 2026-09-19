@@ -23,6 +23,10 @@ ICONS_DIR = WEB_DIR / "icons"
 VIEWS = {"player": ".", "gm": "gm"}
 
 REQUIRED_FIELDS = ["id", "name", "icon", "true_location", "gm_description", "state"]
+# An unrecognized field is an error, not ignored: a misspelled optional field
+# (such as "player_descripton") would otherwise fall back through the cascade
+# and show the GM description to players.
+OPTIONAL_FIELDS = ["rumored_location", "player_description", "rumored_description"]
 STATES = ["gm-only", "rumored", "known"]
 
 
@@ -34,6 +38,11 @@ def validate_pois() -> None:
     for i, poi in enumerate(pois):
         label = poi.get("id", f"entry {i}")
         errors += [f"{label}: missing '{field}'" for field in REQUIRED_FIELDS if field not in poi]
+        errors += [
+            f"{label}: unknown field '{field}'"
+            for field in poi
+            if field not in REQUIRED_FIELDS + OPTIONAL_FIELDS
+        ]
         if poi.get("state") not in STATES:
             errors.append(f"{label}: state must be one of {STATES}")
         if "icon" in poi and not (ICONS_DIR / poi["icon"]).exists():

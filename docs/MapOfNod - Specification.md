@@ -97,6 +97,8 @@ A point of interest renders as an icon at a location, with a short name as a lab
 | `rumored_description` | no       | Longer text which detaults to `player_description` if absent |
 | `state`               | yes      | `gm-only`, `rumored` or `known`                              |
 
+Any other field is a build error. This guards against a misspelled optional field silently falling back to `gm_description` and showing GM text to players.
+
 ### States
 
 - **`gm-only`** — absent from the player view entirely.
