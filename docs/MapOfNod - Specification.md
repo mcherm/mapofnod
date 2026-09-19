@@ -65,6 +65,8 @@ Hex size and orientation need not be fixed before the background art is drawn. F
 
 Simple rectangular x/y, with alternate columns displayed offset by half a cell. This is the offset scheme conventionally called odd-q or even-q for flat-top hexes; **pick one convention and record it here**, since the two shift opposite columns and mixing them produces off-by-one errors in hand-entered data.
 
+**Chosen convention: odd-q.** Odd-numbered columns are shifted half a hex downward. So the neighbours of `0,0` (an even column) are `0,-1`, `1,-1`, `1,0`, `0,1`, `-1,0` and `-1,-1`; the neighbours of `1,0` (an odd column) are `1,-1`, `2,0`, `2,1`, `1,1`, `0,1` and `0,0`.
+
 Stored as strings like `"14,9"`. Axial or cube coordinates are unnecessary because no distance or neighbour math is being done.
 
 ### Rendering and visited state
