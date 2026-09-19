@@ -84,9 +84,17 @@
         iconUrl: "icons/" + poi.icon,
         iconSize: [ICON_SIZE, ICON_SIZE],
         iconAnchor: [ICON_SIZE / 2, ICON_SIZE / 2],
+        tooltipAnchor: [0, ICON_SIZE / 2], // bottom edge of the icon
         className: "poi-icon",
       });
-      L.marker(toLatLng(resolved.location), { icon, alt: poi.name }).addTo(map);
+      L.marker(toLatLng(resolved.location), { icon, alt: poi.name })
+        .bindTooltip(poi.name, {
+          permanent: true,
+          direction: "bottom",
+          offset: [0, 2],
+          className: "poi-label",
+        })
+        .addTo(map);
     }
   }
 

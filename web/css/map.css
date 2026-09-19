@@ -18,3 +18,19 @@ html, body, #map {
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+/* Name label beside each POI icon (a permanent Leaflet tooltip). */
+.leaflet-tooltip.poi-label {
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  color: #222;
+  font: 600 13px/1.3 Georgia, "Times New Roman", serif;
+}
+
+/* No pointer arrow: the label sits right below its icon. */
+.leaflet-tooltip.poi-label::before {
+  display: none;
+}
