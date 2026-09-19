@@ -61,3 +61,77 @@ html, body, #map {
 .hex-toggle.off svg {
   stroke: #aaa;
 }
+
+/* Menu button at the lower left: three horizontal lines. */
+.menu-button svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  stroke: #333;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* About panel. The dialog itself has no padding, so a click that lands on it
+   directly (rather than on .about-content) must be on the backdrop. */
+#about {
+  width: min(32rem, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+  padding: 0;
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  color: #222;
+  font: 15px/1.5 Georgia, "Times New Roman", serif;
+}
+
+#about::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.about-content {
+  position: relative;
+  padding: 1rem 1.25rem;
+}
+
+.about-content h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.about-content h2 {
+  margin: 1.25rem 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.about-content p,
+.about-content ul {
+  margin: 0.25rem 0;
+}
+
+.about-content ul {
+  padding-left: 1.25rem;
+}
+
+.about-content li + li {
+  margin-top: 0.4rem;
+}
+
+.about-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  color: #555;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.about-close:hover {
+  color: #000;
+}

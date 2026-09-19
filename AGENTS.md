@@ -9,6 +9,8 @@ built with Leaflet and plain HTML/CSS/JS, and deployed to S3 behind CloudFront. 
 - `web/`: front-end source (HTML, CSS, JS, icons). Leaflet 1.9.4 is vendored in `web/vendor/leaflet-1.9.4/`.
 - `web/icons/`: point-of-interest icons from game-icons.net, converted to black-on-white. Add them with
   `scripts/add_icon.py AUTHOR/NAME`, which also records the CC BY credit in `web/icons/CREDITS.md`.
+- The About panel (the `<dialog id="about">` in `web/index.html`) holds the copyright, license and credits. Keep
+  its credits current: adding an icon by a new game-icons.net author, or a new library, means a new credit there.
 - `data/`: hand-edited config files (map layout, visited hexes, points of interest) and `data/images/` (the
   background map). The build copies these into each view.
 - `scripts/`: build and deploy scripts (Python 3, standard library only)

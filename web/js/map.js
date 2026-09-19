@@ -86,7 +86,7 @@
 
   // Builds the hex grid as SVG polygons, with unvisited hexes lightly shaded.
   // Not interactive, so clicks pass through to the map. Returns the layer
-  // without adding it: the grid starts hidden, and HexToggle shows it.
+  // without adding it: the grid starts hidden, and the hex toggle shows it.
   function hexGrid(hexes, visited) {
     const grid = L.layerGroup();
     for (let col = 0; col < hexes.cols; col++) {
@@ -105,45 +105,76 @@
     return grid;
   }
 
-  // A map control, placed below Leaflet's zoom buttons, that shows and hides
-  // a layer. Its button is drawn as a hexagon.
-  const HexToggle = L.Control.extend({
-    options: { position: "topleft" },
-
-    initialize(layer, options) {
-      L.Util.setOptions(this, options);
-      this._layer = layer;
-    },
-
-    onAdd(map) {
+  // A map control with a single button, styled like Leaflet's own controls.
+  // Options: position, className, title (tooltip), label (for screen
+  // readers), svg (the button's image) and onClick(button).
+  const ButtonControl = L.Control.extend({
+    onAdd() {
+      const { className, title, label, svg, onClick } = this.options;
       const bar = L.DomUtil.create("div", "leaflet-bar");
-      const button = L.DomUtil.create("a", "hex-toggle", bar);
+      const button = L.DomUtil.create("a", className, bar);
       button.href = "#";
       button.role = "button";
-      button.title = "Show or hide the hex grid";
-      button.setAttribute("aria-label", "Hex grid");
-      button.innerHTML =
-        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
-        '<polygon points="1,10 5.5,2.2 14.5,2.2 19,10 14.5,17.8 5.5,17.8" /></svg>';
-      const update = () => {
-        const shown = map.hasLayer(this._layer);
-        button.classList.toggle("off", !shown);
-        button.setAttribute("aria-pressed", String(shown));
-      };
+      button.title = title;
+      button.setAttribute("aria-label", label);
+      button.innerHTML = svg;
       L.DomEvent.disableClickPropagation(bar);
       L.DomEvent.on(button, "click", (e) => {
         L.DomEvent.preventDefault(e);
-        if (map.hasLayer(this._layer)) {
-          map.removeLayer(this._layer);
-        } else {
-          map.addLayer(this._layer);
-        }
-        update();
+        onClick(button);
       });
-      update();
       return bar;
     },
   });
+
+  // A hexagon button, below Leaflet's zoom buttons, that shows and hides the
+  // hex grid.
+  function addHexToggle(map, grid) {
+    const update = (button) => {
+      const shown = map.hasLayer(grid);
+      button.classList.toggle("off", !shown);
+      button.setAttribute("aria-pressed", String(shown));
+    };
+    const control = new ButtonControl({
+      position: "topleft",
+      className: "hex-toggle",
+      title: "Show or hide the hex grid",
+      label: "Hex grid",
+      svg:
+        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
+        '<polygon points="1,10 5.5,2.2 14.5,2.2 19,10 14.5,17.8 5.5,17.8" /></svg>',
+      onClick(button) {
+        if (map.hasLayer(grid)) {
+          map.removeLayer(grid);
+        } else {
+          map.addLayer(grid);
+        }
+        update(button);
+      },
+    }).addTo(map);
+    update(control.getContainer().firstChild);
+  }
+
+  // A menu button, at the lower left, that opens the About panel (the
+  // <dialog id="about"> in index.html). Clicking outside the panel closes it.
+  function addAboutMenu(map) {
+    const dialog = document.getElementById("about");
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        dialog.close(); // the click was on the backdrop, not the content
+      }
+    });
+    new ButtonControl({
+      position: "bottomleft",
+      className: "menu-button",
+      title: "About Map of Nod",
+      label: "About",
+      svg:
+        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
+        '<path d="M3 5h14M3 10h14M3 15h14" /></svg>',
+      onClick: () => dialog.showModal(),
+    }).addTo(map);
+  }
 
   // Which view to display, "player" or "gm". Set by the build.
   const VIEW = document.documentElement.dataset.view;
@@ -245,7 +276,8 @@
     .then(([config, poiData, visitedText]) => {
       const map = buildMap(config);
       const grid = hexGrid(config.hexes, parseVisited(visitedText));
-      new HexToggle(grid).addTo(map);
+      addHexToggle(map, grid);
+      addAboutMenu(map);
       addPois(map, poiData.pois);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));

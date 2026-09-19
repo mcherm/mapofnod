@@ -9,6 +9,57 @@
 </head>
 <body>
   <div id="map"></div>
+
+  <!-- About panel, opened by the menu button at the lower left. -->
+  <dialog id="about" aria-labelledby="about-title">
+    <div class="about-content">
+      <form method="dialog">
+        <button class="about-close" aria-label="Close">&times;</button>
+      </form>
+
+      <h1 id="about-title">Map of Nod</h1>
+      <p>
+        A shared map of the world our fantasy roleplaying game is using for our current game, set near the
+        village of Nod. Includes explored features but also rumored items.
+      </p>
+
+      <h2>Author</h2>
+      <p>
+        Created by Michael Chermside (<a href="https://www.mcherm.com">mcherm.com</a>).
+      </p>
+
+      <h2>AI Use Acknowledgment</h2>
+      <p>
+        <a href="https://claude.com/">AI</a> <i>was</i> used in developing and testing the code for this tool.
+      </p>
+
+      <h2>Copyright and License</h2>
+      <p>
+        Copyright &copy; 2026 Michael Chermside. The Map of Nod software is released under the
+        <a href="https://opensource.org/license/mit">MIT License</a>.
+      </p>
+
+      <h2>Source Code</h2>
+      <p>
+        The source code for this site can be found <a href="https://github.com/mcherm/mapofnod">on GitHub</a>.
+      </p>
+
+      <h2>Credits</h2>
+      <ul>
+        <li>
+          <a href="https://leafletjs.com">Leaflet</a> 1.9.4, the map library. Copyright &copy; 2010&ndash;2023
+          Volodymyr Agafonkin, &copy; 2010&ndash;2011 CloudMade. Used under the
+          <a href="vendor/leaflet-1.9.4/LICENSE">BSD 2-Clause License</a>.
+        </li>
+        <li>
+          Point-of-interest icons from <a href="https://game-icons.net">game-icons.net</a>. Used under
+          <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>, with colors inverted to
+          black-on-white.
+        </li>
+      </ul>
+    </div>
+  </dialog>
+
   <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
   <script src="js/map.js"></script>
 </body>
