@@ -6,8 +6,9 @@ built with Leaflet and plain HTML/CSS/JS, and deployed to S3 behind CloudFront. 
 
 ## Layout
 
-- `web/`: front-end source (HTML, CSS, JS, images, icons)
-- `data/`: hand-edited config files (map layout, visited hexes, points of interest)
+- `web/`: front-end source (HTML, CSS, JS, icons). Leaflet 1.9.4 is vendored in `web/vendor/leaflet-1.9.4/`.
+- `data/`: hand-edited config files (map layout, visited hexes, points of interest) and `data/images/` (the
+  background map). The build copies these into each view.
 - `scripts/`: build and deploy scripts (Python 3, standard library only)
 - `docs/`: documentation, including the specification
 - `build/`: generated output (git-ignored). The player view is the site root (`build/index.html`) and the GM
@@ -21,6 +22,12 @@ Run everything through `just`:
 - `just serve`: build, then serve locally at http://localhost:8000/ (player) and http://localhost:8000/gm/ (GM)
 - `just clean`: delete `build/`
 - `just deploy`: push to S3 and invalidate CloudFront (not yet configured)
+
+## Map coordinates
+
+Locations are pixel offsets on the background image, measured from `map.origin` in `data/map_config.json`, with
+y increasing downward. So they can be negative. Leaflet uses `CRS.Simple`, and `web/js/map.js` converts a map
+coordinate `[x, y]` to the LatLng `[-y, x]`.
 
 ## Hex coordinates
 

@@ -1,0 +1,8 @@
+{
+  "map": {
+    "image": "region.jpg",
+    "width": 4000,
+    "height": 3000,
+    "origin": [2000, 1500]
+  }
+}

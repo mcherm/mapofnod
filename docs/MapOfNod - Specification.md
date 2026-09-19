@@ -142,7 +142,8 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
   "map": {
     "image": "region.jpg",
     "width": 4000,
-    "height": 3000
+    "height": 3000,
+    "origin": [2000, 1500]
   },
   "hexes": {
     "size": 96,
@@ -218,7 +219,7 @@ Notes on the example:
 - Deepcut Mines omits the optional fields, so its player description falls back to the GM text and its location is the true one.
 - Vaskal's Observatory has all three descriptions distinct and a deliberately wrong rumored location, roughly 170 pixels west of the truth.
 - `origin` is the pixel position of hex `0,0` on the background image, which is how the grid is registered against the art.
-- Locations are pixel coordinates on the background image, not hex coordinates. Points of interest and hexes stay independent.
+- Locations are pixel coordinates on the background image, not hex coordinates, measured from `map.origin` (a pixel position on the image) with y increasing downward, so they may be negative. Points of interest and hexes stay independent.
 
 ## Icons
 
