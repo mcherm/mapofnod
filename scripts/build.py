@@ -74,7 +74,10 @@ def main() -> None:
         shutil.copy2(DATA_DIR / "points_of_interest.json", out / "points_of_interest.json")
         shutil.copy2(DATA_DIR / "visited_hexes.txt", out / "visited_hexes.txt")
         index = out / "index.html"
-        index.write_text(index.read_text().replace('data-view="player"', f'data-view="{view}"'))
+        html = index.read_text().replace('data-view="player"', f'data-view="{view}"')
+        if view == "gm":
+            html = html.replace("</title>", '</title>\n  <meta name="robots" content="noindex">')
+        index.write_text(html)
         print(f"Built {view} view -> {out.relative_to(ROOT)}")
 
 

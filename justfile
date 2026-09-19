@@ -1,3 +1,8 @@
+# AWS CLI profiles: an admin profile for changing the stack, and the narrowly
+# scoped deployer for uploading the site. See aws/README.md.
+infra_profile := "power-user"
+deploy_profile := "mapofnod-deploy"
+
 # List available recipes
 default:
     @just --list
@@ -14,6 +19,10 @@ clean:
 serve: build
     python3 -m http.server 8000 --directory build
 
-# Build and push to S3, then invalidate CloudFront (not yet configured)
+# Build, upload to S3, then invalidate CloudFront
 deploy: build
-    @echo "deploy is not yet configured" && exit 1
+    AWS_PROFILE={{deploy_profile}} aws/deploy.sh
+
+# Create or update the AWS resources from aws/mapofnod.yaml
+infra:
+    AWS_PROFILE={{infra_profile}} aws/update_stack.sh

@@ -1,0 +1,215 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Map of Nod: static site served from a private S3 bucket through CloudFront at
+  https://mapofnod.com, with www redirected to the apex. Deploy in us-east-1
+  (CloudFront requires its ACM certificate there). Apply with `just infra`.
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: mapofnod.com
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Default: Z002428838S7J783J2GC
+    Description: Route 53 hosted zone for DomainName.
+
+Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Sub "www.${DomainName}"
+      ValidationMethod: DNS
+      # CloudFormation creates the validation records in the hosted zone and
+      # waits for the certificate to be issued.
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Sub "www.${DomainName}"
+          HostedZoneId: !Ref HostedZoneId
+      Tags:
+        - Key: mapofnod
+          Value: ""
+
+  # Private bucket, readable only by the CloudFront distribution. Retained if
+  # the stack is deleted, so the site's files are never destroyed by accident.
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: mapofnod-frontend
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: mapofnod
+          Value: ""
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: mapofnod-frontend
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${Bucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  # Runs on every viewer request:
+  #   - www.<domain>/x  -> 301 to https://<domain>/x
+  #   - /gm             -> 301 to /gm/  (last path segment has no dot)
+  #   - /gm/            -> serves gm/index.html  (S3 has no directory indexes)
+  RequestFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: mapofnod-request
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Redirect www to apex; serve index.html for directory URLs.
+        Runtime: cloudfront-js-2.0
+      FunctionCode: !Sub |
+        function redirect(location) {
+          return {
+            statusCode: 301,
+            statusDescription: "Moved Permanently",
+            headers: { location: { value: location } },
+          };
+        }
+
+        function handler(event) {
+          var request = event.request;
+          var host = request.headers.host ? request.headers.host.value : "";
+          var uri = request.uri;
+          if (host === "www.${DomainName}") {
+            return redirect("https://${DomainName}" + uri);
+          }
+          if (uri.endsWith("/")) {
+            request.uri = uri + "index.html";
+          } else if (uri.split("/").pop().indexOf(".") === -1) {
+            return redirect(uri + "/");
+          }
+          return request;
+        }
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Map of Nod
+        Aliases:
+          - !Ref DomainName
+          - !Sub "www.${DomainName}"
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: s3-frontend
+            DomainName: !GetAtt Bucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: s3-frontend
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt RequestFunction.FunctionMetadata.FunctionARN
+      Tags:
+        - Key: mapofnod
+          Value: ""
+
+  DnsRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - Name: !Ref DomainName
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # fixed zone ID for all CloudFront distributions
+        - Name: !Ref DomainName
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # fixed zone ID for all CloudFront distributions
+        - Name: !Sub "www.${DomainName}"
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # fixed zone ID for all CloudFront distributions
+        - Name: !Sub "www.${DomainName}"
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt Distribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # fixed zone ID for all CloudFront distributions
+
+  # Permissions for `just deploy`. The mapofnod-deployer user and its access
+  # key are created by hand (see aws/README.md) so no secret passes through
+  # CloudFormation.
+  DeployerGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: mapofnod-deployers
+      Policies:
+        - PolicyName: deploy-mapofnod
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt Bucket.Arn
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
+                Resource: !Sub "${Bucket.Arn}/*"
+              - Effect: Allow
+                Action: [cloudfront:CreateInvalidation, cloudfront:GetInvalidation]
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+              - Effect: Allow
+                Action: cloudformation:DescribeStacks
+                Resource: !Ref AWS::StackId
+
+Outputs:
+  BucketName:
+    Value: !Ref Bucket
+  DistributionId:
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Value: !GetAtt Distribution.DomainName

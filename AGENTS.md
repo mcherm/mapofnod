@@ -13,6 +13,8 @@ built with Leaflet and plain HTML/CSS/JS, and deployed to S3 behind CloudFront. 
   background map). The build copies these into each view.
 - `scripts/`: build and deploy scripts (Python 3, standard library only)
 - `docs/`: documentation, including the specification
+- `aws/`: CloudFormation template and deploy scripts; see `aws/README.md`. AWS resources change only through the
+  template, never the console.
 - `build/`: generated output (git-ignored). The player view is the site root (`build/index.html`) and the GM
   view is under `build/gm/`
 
@@ -23,7 +25,8 @@ Run everything through `just`:
 - `just build`: build both views into `build/`
 - `just serve`: build, then serve locally at http://localhost:8000/ (player) and http://localhost:8000/gm/ (GM)
 - `just clean`: delete `build/`
-- `just deploy`: push to S3 and invalidate CloudFront (not yet configured)
+- `just deploy`: build, sync to S3 and invalidate CloudFront (profile `mapofnod-deploy`)
+- `just infra`: create or update the AWS resources from `aws/mapofnod.yaml` (profile `power-user`)
 
 ## Map coordinates
 

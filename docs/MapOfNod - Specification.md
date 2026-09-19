@@ -41,7 +41,9 @@ A static site. No server, no database, no runtime. (At least for now -- that cou
 
 **Source of truth:** a single config file in the GitHub repo, edited directly and committed. Git gives campaign version history for free.
 
-**Build:** a script validates the config files and emits two sets of output, a player build and a GM build. Both receive the same, unedited config files; they differ only in which view the page is told to display. The front end reads the fields that apply to its view. Deploy is a build plus `s3 sync`.
+**Build:** a script validates the config files and emits two sets of output, a player build and a GM build. Both receive the same, unedited config files; they differ only in which view the page is told to display. The front end reads the fields that apply to its view. Deploy is a build plus `s3 sync` and a CloudFront invalidation.
+
+**Hosting:** served at https://mapofnod.com. The AWS resources are one CloudFormation stack (`aws/mapofnod.yaml`): a private S3 bucket readable only by CloudFront through Origin Access Control, an ACM certificate, Route 53 alias records, and a CloudFront Function that serves `index.html` for directory URLs such as `/gm/` and redirects `www.mapofnod.com` to the apex. Deploys run as a dedicated IAM user that may only upload to the bucket and invalidate the distribution. The GM page carries a `noindex` tag.
 
 **Data loading:** the front end fetches its data over HTTP as JSON rather than importing it at build time. This keeps the door open: swapping to a Lambda endpoint later changes the fetch URL and nothing else.
 
