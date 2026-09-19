@@ -41,13 +41,13 @@ A static site. No server, no database, no runtime. (At least for now -- that cou
 
 **Source of truth:** a single config file in the GitHub repo, edited directly and committed. Git gives campaign version history for free.
 
-**Build:** a script reads the single source config and emits two sets of output, a player build and a GM build. The player build has GM-only points of interest removed entirely and `gm_description` stripped from the rest, so nothing GM-facing is ever served to the player origin. Deploy is a build plus `s3 sync`.
+**Build:** a script validates the config files and emits two sets of output, a player build and a GM build. Both receive the same, unedited config files; they differ only in which view the page is told to display. The front end reads the fields that apply to its view. Deploy is a build plus `s3 sync`.
 
 **Data loading:** the front end fetches its data over HTTP as JSON rather than importing it at build time. This keeps the door open: swapping to a Lambda endpoint later changes the fetch URL and nothing else.
 
 **Adjustable views:** simple changes to the display (like toggling the hex overlay on and off or switching to the player view when logged in as the gm) will be performed with controls on the page.
 
-**Access control:** two URLs. The player build at a public URL; the GM build at a separate unlisted URL. No login in v1. Anyone with the GM link sees everything, which is an accepted risk for a home game.
+**Access control:** two URLs. The player build at a public URL; the GM build at a separate unlisted URL. No login in v1. Anyone with the GM link sees everything, which is an accepted risk for a home game. GM data is not hidden from players either: the player site serves the same config files, so a player who opens the raw JSON can read GM-only points of interest and GM descriptions. This is also an accepted risk; the player view simply doesn't display them.
 
 ## Base map and hex layer
 
@@ -119,7 +119,7 @@ Public URL. Shows the background, the toggleable hex overlay with visited shadin
 
 Must work well on a phone. For some players, this may be the only device they use. Others might use a tablet or laptop browser.
 
-The player build contains no GM data at all: `gm-only` points of interest are omitted from the JSON, and `gm_description` is stripped from those that remain. Nothing sensitive reaches the browser.
+The player build serves the same `points_of_interest.json` as the GM build. The player view's JavaScript skips `gm-only` points of interest and applies the cascade to choose each remaining point's location and description. GM data is present in the JSON but never displayed (see Access control).
 
 Display of POIs: the icon is centered at the location (`rumored_location` or `true_location`), the name floats nearby. The user can interact to display the longer description. (How that interaction works may vary based on things like touch vs mouse.)
 
@@ -188,6 +188,7 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
 ........................................
 ```
 
+### points_of_interest.json
 ```json
 {
   "pois": [

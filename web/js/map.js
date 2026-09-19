@@ -1,4 +1,4 @@
-// Displays the background map with Leaflet.
+// Displays the background map and points of interest with Leaflet.
 //
 // Map coordinates are image pixels measured from map.origin (a pixel position
 // on the image), with x increasing rightward and y increasing downward. Leaflet's
@@ -8,6 +8,7 @@
   "use strict";
 
   const MAX_ZOOM = 2; // 4x native image resolution
+  const ICON_SIZE = 32; // screen pixels, at every zoom level
 
   function toLatLng([x, y]) {
     return L.latLng(-y, x);
@@ -50,13 +51,58 @@
     return map;
   }
 
-  fetch("map_config.json")
-    .then((response) => {
+  // Which view to display, "player" or "gm". Set by the build.
+  const VIEW = document.documentElement.dataset.view;
+
+  // Resolves the location/description cascade for this view. Returns null if
+  // the POI isn't shown in this view.
+  function resolvePoi(poi) {
+    if (VIEW === "gm") {
+      return { location: poi.true_location, description: poi.gm_description };
+    }
+    const playerDescription = poi.player_description ?? poi.gm_description;
+    switch (poi.state) {
+      case "known":
+        return { location: poi.true_location, description: playerDescription };
+      case "rumored":
+        return {
+          location: poi.rumored_location ?? poi.true_location,
+          description: poi.rumored_description ?? playerDescription,
+        };
+      default:
+        return null;
+    }
+  }
+
+  function addPois(map, pois) {
+    for (const poi of pois) {
+      const resolved = resolvePoi(poi);
+      if (resolved === null) {
+        continue;
+      }
+      const icon = L.icon({
+        iconUrl: "icons/" + poi.icon,
+        iconSize: [ICON_SIZE, ICON_SIZE],
+        iconAnchor: [ICON_SIZE / 2, ICON_SIZE / 2],
+        className: "poi-icon",
+      });
+      L.marker(toLatLng(resolved.location), { icon, alt: poi.name }).addTo(map);
+    }
+  }
+
+  function fetchJson(url) {
+    return fetch(url).then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        throw new Error(`${url}: HTTP ${response.status}`);
       }
       return response.json();
+    });
+  }
+
+  Promise.all([fetchJson("map_config.json"), fetchJson("points_of_interest.json")])
+    .then(([config, poiData]) => {
+      const map = buildMap(config);
+      addPois(map, poiData.pois);
     })
-    .then(buildMap)
     .catch((err) => showError(`Could not load the map: ${err.message}`));
 })();

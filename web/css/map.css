@@ -12,3 +12,9 @@ html, body, #map {
   color: #f4e9d8;
   font-family: system-ui, sans-serif;
 }
+
+.poi-icon {
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}

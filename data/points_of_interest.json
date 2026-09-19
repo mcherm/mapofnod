@@ -1,0 +1,76 @@
+{
+  "pois": [
+    {
+      "id": "vaskal-tower",
+      "name": "Vaskal's Observatory",
+      "icon": "watchtower.svg",
+      "true_location": [750, -600],
+      "rumored_location": [450, -500],
+      "gm_description": "A slender stone tower on the ridge. Vaskal is not dead. The upper floor is sealed by a fixed object spell.",
+      "player_description": "A slender stone tower on the ridge, its upper windows shuttered.",
+      "rumored_description": "Charcoal burners speak of a burnt tower somewhere east of the ford.",
+      "state": "rumored"
+    },
+    {
+      "id": "deepcut-mines",
+      "name": "Deepcut Mines",
+      "icon": "gold-mine.svg",
+      "true_location": [1500, -750],
+      "gm_description": "An abandoned diamond mine.",
+      "state": "known"
+    },
+    {
+      "id": "oakhollow",
+      "name": "Oakhollow",
+      "icon": "village.svg",
+      "true_location": [-900, 400],
+      "gm_description": "A farming village of about two hundred souls, and the party's home base. The reeve, Marta Kell, is quietly paying tribute to the bandits in the southern wood.",
+      "player_description": "A farming village of about two hundred souls, and the party's home base.",
+      "state": "known"
+    },
+    {
+      "id": "greywatch-light",
+      "name": "Greywatch Light",
+      "icon": "lighthouse.svg",
+      "true_location": [-1300, -400],
+      "gm_description": "A lighthouse on the sea cliffs, kept by old Tobin and his three cats. Its lamp has not failed in forty years.",
+      "state": "known"
+    },
+    {
+      "id": "drowned-shrine",
+      "name": "The Drowned Shrine",
+      "icon": "greek-temple.svg",
+      "true_location": [800, 380],
+      "gm_description": "A marble shrine to a forgotten sea god, half sunk in the lake shallows. Its priests still wait below the water.",
+      "player_description": "A marble shrine half sunk in the lake shallows, its steps slick with weed.",
+      "rumored_description": "Fishermen won't cast their nets near the north shore of Mirror Lake. They say something old sleeps there.",
+      "state": "rumored"
+    },
+    {
+      "id": "witch-house",
+      "name": "Mother Gribble's House",
+      "icon": "spooky-house.svg",
+      "true_location": [-700, -600],
+      "gm_description": "A crooked house deep in the Old Wood. Mother Gribble trades cures for secrets, and her prices go up with every visit.",
+      "state": "gm-only"
+    },
+    {
+      "id": "weeping-stone",
+      "name": "The Weeping Stone",
+      "icon": "menhir.svg",
+      "true_location": [-500, 1200],
+      "rumored_location": [-300, 1150],
+      "gm_description": "A lone standing stone among the southern hills. Its runes mark the way into a barrow beneath it.",
+      "rumored_description": "Shepherds tell of a standing stone in the southern hills that weeps on moonless nights.",
+      "state": "rumored"
+    },
+    {
+      "id": "red-hand-camp",
+      "name": "Red Hand Camp",
+      "icon": "forest-camp.svg",
+      "true_location": [1300, 1100],
+      "gm_description": "The Red Hand bandits' hidden camp: a dozen cutthroats under a one-eyed captain named Sorrel.",
+      "state": "gm-only"
+    }
+  ]
+}
