@@ -71,7 +71,7 @@ Stored as strings like `"14,9"`. Axial or cube coordinates are unnecessary becau
 
 ### Rendering and visited state
 
-The hex layer is a toggleable overlay, drawn as SVG polygons. Two states only: visited and unvisited, distinguished by a slight fill difference. The visited list is an array of coordinate strings in a config file, appended to after each session.
+The hex layer is a toggleable overlay, drawn as SVG polygons. Two states only: visited and unvisited, distinguished by a slight fill difference: unvisited hexes get a faint dark shading, visited hexes are left clear. The visited hexes are recorded in `visited_hexes.txt` (see Config file), updated after each session.
 
 Leaflet vector `weight` is specified in screen pixels, so hex outlines stay a constant thickness at every zoom level by default.
 
@@ -134,7 +134,7 @@ Two GM-only affordances:
 
 ## Config file
 
-A small number of files in the repo, hand-edited. One contains layout data; one has data on which hexes have been visited; one has information about the points of interest. Shown here as JSON.
+A small number of files in the repo, hand-edited. One contains layout data; one has data on which hexes have been visited; one has information about the points of interest. The layout and points of interest are JSON; the visited hexes are a text file drawn as a picture of the grid.
 
 ### map_config.json
 ```json
@@ -147,7 +147,7 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
   },
   "hexes": {
     "size": 64,
-    "origin": [-1872, -1413],
+    "origin": [-1920, -1441.07],
     "cols": 40,
     "rows": 26
   }
@@ -155,6 +155,8 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
 ```
 
 ### visited_hexes.txt
+One line per row of hexes and one character per column, so it must have `hexes.rows` lines of `hexes.cols` characters. `V` marks a visited hex and `.` an unvisited one. The first character of the first line is hex `0,0`. The build rejects a file of the wrong size or with other characters. Because odd columns are shifted down on the map, a diagonal path looks slightly different in the file than on the map.
+
 ```text
 ........................................
 ........................................
@@ -173,10 +175,6 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
 ............VVV..VV.....................
 ...........VVVVVVVV.....................
 ............VVVVVV......................
-........................................
-........................................
-........................................
-........................................
 ........................................
 ........................................
 ........................................
@@ -219,7 +217,7 @@ Notes on the example:
 
 - Deepcut Mines omits the optional fields, so its player description falls back to the GM text and its location is the true one.
 - Vaskal's Observatory has all three descriptions distinct and a deliberately wrong rumored location, roughly 170 pixels west of the truth.
-- `hexes.origin` is the location (in map coordinates, like any other location) of the centre of hex `0,0`, which is how the grid is registered against the art. `hexes.size` is the distance in image pixels from a hex's centre to any corner, which is also its side length; a flat-top hex is `2 × size` wide and `√3 × size` tall, and columns are `1.5 × size` apart. `cols` and `rows` give the grid's extent, with hexes numbered from `0,0`. The example values fit a 40 × 26 grid inside the 4000 × 3000 image.
+- `hexes.origin` is the location (in map coordinates, like any other location) of the centre of hex `0,0`, which is how the grid is registered against the art. `hexes.size` is the distance in image pixels from a hex's centre to any corner, which is also its side length; a flat-top hex is `2 × size` wide and `√3 × size` tall, and columns are `1.5 × size` apart. `cols` and `rows` give the grid's extent, with hexes numbered from `0,0`. The example values fit a 40 × 26 grid inside the 4000 × 3000 image, with the centre of hex `20,13` at location `[0,0]`.
 - Locations are pixel coordinates on the background image, not hex coordinates, measured from `map.origin` (a pixel position on the image) with y increasing downward, so they may be negative. Points of interest and hexes stay independent.
 
 ## Icons

@@ -1,6 +1,15 @@
 {
   "pois": [
     {
+      "id": "nod",
+      "name": "Vilage of Nod",
+      "icon": "village.svg",
+      "true_location": [0, 0],
+      "rumored_location": [0, 0],
+      "gm_description": "Home base for the party: the village of Nod.",
+      "state": "known"
+    },
+    {
       "id": "vaskal-tower",
       "name": "Vaskal's Observatory",
       "icon": "watchtower.svg",

@@ -45,8 +45,25 @@ def validate_pois() -> None:
         sys.exit("Errors in data/points_of_interest.json:\n  " + "\n  ".join(errors))
 
 
+def validate_visited_hexes() -> None:
+    """Check that data/visited_hexes.txt matches the hex grid's size."""
+    hexes = json.loads((DATA_DIR / "map_config.json").read_text())["hexes"]
+    lines = (DATA_DIR / "visited_hexes.txt").read_text().splitlines()
+    errors = []
+    if len(lines) != hexes["rows"]:
+        errors.append(f"has {len(lines)} lines, expected {hexes['rows']} (hexes.rows)")
+    for row, line in enumerate(lines):
+        if len(line) != hexes["cols"]:
+            errors.append(f"line {row + 1} has {len(line)} characters, expected {hexes['cols']} (hexes.cols)")
+        if set(line) - set(".V"):
+            errors.append(f"line {row + 1} contains characters other than '.' and 'V'")
+    if errors:
+        sys.exit("Errors in data/visited_hexes.txt:\n  " + "\n  ".join(errors))
+
+
 def main() -> None:
     validate_pois()
+    validate_visited_hexes()
     if BUILD_DIR.exists():
         shutil.rmtree(BUILD_DIR)
     for view, subdir in VIEWS.items():
@@ -55,6 +72,7 @@ def main() -> None:
         shutil.copy2(DATA_DIR / "map_config.json", out / "map_config.json")
         shutil.copytree(DATA_DIR / "images", out / "images", dirs_exist_ok=True)
         shutil.copy2(DATA_DIR / "points_of_interest.json", out / "points_of_interest.json")
+        shutil.copy2(DATA_DIR / "visited_hexes.txt", out / "visited_hexes.txt")
         index = out / "index.html"
         index.write_text(index.read_text().replace('data-view="player"', f'data-view="{view}"'))
         print(f"Built {view} view -> {out.relative_to(ROOT)}")

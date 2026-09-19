@@ -9,6 +9,7 @@
 
   const MAX_ZOOM = 2; // 4x native image resolution
   const ICON_SIZE = 32; // screen pixels, at every zoom level
+  const UNVISITED_SHADING = 0.15; // fill opacity of unvisited hexes
 
   function toLatLng([x, y]) {
     return L.latLng(-y, x);
@@ -69,9 +70,23 @@
     return corners;
   }
 
-  // Draws the hex grid as SVG polygons. Not interactive, so clicks pass
-  // through to the map.
-  function addHexGrid(map, hexes) {
+  // Parses visited_hexes.txt: one line per row, one character per column,
+  // "V" for visited. Returns a Set of "col,row" strings.
+  function parseVisited(text) {
+    const visited = new Set();
+    text.split(/\r?\n/).forEach((line, row) => {
+      [...line].forEach((char, col) => {
+        if (char === "V") {
+          visited.add(`${col},${row}`);
+        }
+      });
+    });
+    return visited;
+  }
+
+  // Draws the hex grid as SVG polygons, with unvisited hexes lightly shaded.
+  // Not interactive, so clicks pass through to the map.
+  function addHexGrid(map, hexes, visited) {
     const grid = L.layerGroup();
     for (let col = 0; col < hexes.cols; col++) {
       for (let row = 0; row < hexes.rows; row++) {
@@ -79,7 +94,9 @@
           color: "#3b2f25",
           opacity: 0.35,
           weight: 1, // screen pixels, at every zoom level
-          fill: false,
+          fill: !visited.has(`${col},${row}`),
+          fillColor: "#3b2f25",
+          fillOpacity: UNVISITED_SHADING,
           interactive: false,
         }).addTo(grid);
       }
@@ -170,19 +187,23 @@
     }
   }
 
-  function fetchJson(url) {
+  function fetchFile(url) {
     return fetch(url).then((response) => {
       if (!response.ok) {
         throw new Error(`${url}: HTTP ${response.status}`);
       }
-      return response.json();
+      return response;
     });
   }
 
-  Promise.all([fetchJson("map_config.json"), fetchJson("points_of_interest.json")])
-    .then(([config, poiData]) => {
+  Promise.all([
+    fetchFile("map_config.json").then((r) => r.json()),
+    fetchFile("points_of_interest.json").then((r) => r.json()),
+    fetchFile("visited_hexes.txt").then((r) => r.text()),
+  ])
+    .then(([config, poiData, visitedText]) => {
       const map = buildMap(config);
-      addHexGrid(map, config.hexes);
+      addHexGrid(map, config.hexes, parseVisited(visitedText));
       addPois(map, poiData.pois);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));
