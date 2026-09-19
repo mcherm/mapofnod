@@ -1,4 +1,4 @@
-// Displays the background map and points of interest with Leaflet.
+// Displays the background map, hex grid and points of interest with Leaflet.
 //
 // Map coordinates are image pixels measured from map.origin (a pixel position
 // on the image), with x increasing rightward and y increasing downward. Leaflet's
@@ -49,6 +49,42 @@
     map.fitBounds(bounds);
     map.on("resize", updateMinZoom);
     return map;
+  }
+
+  // Map coordinate of the centre of hex [col, row]. Hexes are flat-top, and
+  // odd-numbered columns are shifted half a hex downward ("odd-q").
+  function hexCenter(hexes, [col, row]) {
+    const [ox, oy] = hexes.origin;
+    const height = Math.sqrt(3) * hexes.size;
+    return [ox + 1.5 * hexes.size * col, oy + height * (row + 0.5 * (col & 1))];
+  }
+
+  function hexCorners(hexes, hex) {
+    const [cx, cy] = hexCenter(hexes, hex);
+    const corners = [];
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 3) * i;
+      corners.push([cx + hexes.size * Math.cos(angle), cy + hexes.size * Math.sin(angle)]);
+    }
+    return corners;
+  }
+
+  // Draws the hex grid as SVG polygons. Not interactive, so clicks pass
+  // through to the map.
+  function addHexGrid(map, hexes) {
+    const grid = L.layerGroup();
+    for (let col = 0; col < hexes.cols; col++) {
+      for (let row = 0; row < hexes.rows; row++) {
+        L.polygon(hexCorners(hexes, [col, row]).map(toLatLng), {
+          color: "#3b2f25",
+          opacity: 0.35,
+          weight: 1, // screen pixels, at every zoom level
+          fill: false,
+          interactive: false,
+        }).addTo(grid);
+      }
+    }
+    return grid.addTo(map);
   }
 
   // Which view to display, "player" or "gm". Set by the build.
@@ -146,6 +182,7 @@
   Promise.all([fetchJson("map_config.json"), fetchJson("points_of_interest.json")])
     .then(([config, poiData]) => {
       const map = buildMap(config);
+      addHexGrid(map, config.hexes);
       addPois(map, poiData.pois);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));

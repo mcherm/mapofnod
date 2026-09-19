@@ -4,5 +4,11 @@
     "width": 4000,
     "height": 3000,
     "origin": [2000, 1500]
+  },
+  "hexes": {
+    "size": 64,
+    "origin": [-1872, -1413],
+    "cols": 40,
+    "rows": 26
   }
 }

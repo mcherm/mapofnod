@@ -43,7 +43,8 @@ display it.
 
 Flat-top hexes, offset scheme **odd-q**: odd-numbered columns are shifted half a hex downward. Coordinates are
 `"x,y"` strings (column, row). For example, the neighbours of `0,0` are `0,-1`, `1,-1`, `1,0`, `0,1`, `-1,0`
-and `-1,-1`.
+and `-1,-1`. The grid is set by `hexes` in `data/map_config.json`: `origin` is the map coordinate of the centre of
+hex `0,0`, and `size` is the centre-to-corner distance in image pixels.
 
 ## Rules
 
