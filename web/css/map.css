@@ -135,3 +135,33 @@ html, body, #map {
 .about-close:hover {
   color: #000;
 }
+
+/* GM copy-location tool: crosshair button, crosshair cursor while it is on,
+   and the popup showing the copied coordinate. */
+.copy-location-toggle svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.copy-location-toggle.off svg {
+  stroke: #aaa;
+}
+
+.leaflet-container.copy-mode,
+.leaflet-container.copy-mode .leaflet-interactive {
+  cursor: crosshair;
+}
+
+.copy-location .leaflet-popup-content {
+  font: 600 14px/1.4 ui-monospace, Menlo, Consolas, monospace;
+}
+
+.copy-location .copy-status {
+  color: #666;
+  font: 12px/1.4 system-ui, sans-serif;
+}

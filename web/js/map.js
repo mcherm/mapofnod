@@ -155,6 +155,80 @@
     update(control.getContainer().firstChild);
   }
 
+  // GM only: a crosshair button that turns "copy location" mode on and off.
+  // While it is on, clicking the map copies that spot's [x, y] map coordinate
+  // to the clipboard, ready to paste into points_of_interest.json. Dragging
+  // still pans: Leaflet doesn't fire a click after a drag.
+  //
+  // Returns { isActive, copy }. While the mode is on, POI icons hand their
+  // clicks here too, so that a spot under an icon can be copied like any other.
+  function addCopyLocationTool(map) {
+    // closeOnClick is off so that closing is handled below, in one place:
+    // Leaflet's own close runs on "preclick", before this click handler, which
+    // would make a dismissing click look like a fresh one and copy again.
+    const popup = L.popup({ className: "copy-location", closeOnClick: false });
+    let active = false;
+
+    // Copies one spot, or just dismisses the popup if it is already showing.
+    function copy(latlng) {
+      if (popup.isOpen()) {
+        map.closePopup(popup); // this click only dismisses the popup
+        return;
+      }
+      const text = `[${Math.round(latlng.lng)}, ${Math.round(-latlng.lat)}]`;
+      const content = document.createElement("div");
+      content.textContent = text;
+      const status = document.createElement("div");
+      status.className = "copy-status";
+      status.textContent = "Copying…";
+      content.appendChild(status);
+      popup.setLatLng(latlng).setContent(content).openOn(map);
+      // The clipboard needs a secure page (https, or localhost while
+      // developing) and a user gesture, which a click is. Where it isn't
+      // available the text above can still be selected by hand.
+      const failed = () => {
+        status.textContent = "Select the text above to copy it";
+      };
+      if (!navigator.clipboard) {
+        failed();
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        status.textContent = "Copied";
+      }, failed);
+    }
+
+    map.on("click", (e) => {
+      if (active) {
+        copy(e.latlng);
+      }
+    });
+
+    const update = (button) => {
+      button.classList.toggle("off", !active);
+      button.setAttribute("aria-pressed", String(active));
+      map.getContainer().classList.toggle("copy-mode", active);
+    };
+    const control = new ButtonControl({
+      position: "topleft",
+      className: "copy-location-toggle",
+      title: "Copy location: click the map to copy its [x, y] coordinate",
+      label: "Copy location mode",
+      svg:
+        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
+        '<circle cx="10" cy="10" r="5" /><path d="M10 1v4M10 15v4M1 10h4M15 10h4" /></svg>',
+      onClick(button) {
+        active = !active;
+        if (!active) {
+          map.closePopup(popup);
+        }
+        update(button);
+      },
+    }).addTo(map);
+    update(control.getContainer().firstChild);
+    return { isActive: () => active, copy };
+  }
+
   // A menu button, at the lower left, that opens the About panel (the
   // <dialog id="about"> in index.html). Clicking outside the panel closes it.
   function addAboutMenu(map) {
@@ -232,7 +306,8 @@
     };
   }
 
-  function addPois(map, pois) {
+  // copyTool is null in the player view.
+  function addPois(map, pois, copyTool) {
     const toggleDescription = descriptionBox(map);
     for (const poi of pois) {
       const resolved = resolvePoi(poi);
@@ -248,7 +323,15 @@
       });
       const latLng = toLatLng(resolved.location);
       L.marker(latLng, { icon, alt: poi.name })
-        .on("click", () => toggleDescription(poi.id, latLng, resolved.description))
+        .on("click", (e) => {
+          if (copyTool && copyTool.isActive()) {
+            // Leaflet reports a marker click at the marker's own position, so
+            // take the real click point from the browser event.
+            copyTool.copy(map.mouseEventToLatLng(e.originalEvent));
+          } else {
+            toggleDescription(poi.id, latLng, resolved.description);
+          }
+        })
         .bindTooltip(poi.name, {
           permanent: true,
           direction: "bottom",
@@ -277,8 +360,9 @@
       const map = buildMap(config);
       const grid = hexGrid(config.hexes, parseVisited(visitedText));
       addHexToggle(map, grid);
+      const copyTool = VIEW === "gm" ? addCopyLocationTool(map) : null;
       addAboutMenu(map);
-      addPois(map, poiData.pois);
+      addPois(map, poiData.pois, copyTool);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));
 })();

@@ -46,6 +46,11 @@ says `player`, and the build changes it to `gm` in the GM copy. `web/js/map.js` 
 view. GM data is visible in the player site's JSON; that's an accepted risk, but the player view must never
 display it.
 
+## GM view
+
+The GM view (`/gm/`) has a crosshair "copy location" button below the hex toggle. While it is on, clicking the
+map copies that spot as an `[x, y]` map coordinate, ready to paste into `data/points_of_interest.json`.
+
 ## Hex coordinates
 
 Flat-top hexes, offset scheme **odd-q**: odd-numbered columns are shifted half a hex downward. Coordinates are
