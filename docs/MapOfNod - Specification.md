@@ -105,7 +105,7 @@ Any other field is a build error. This guards against a misspelled optional fiel
 - **`rumored`** — appears in the player view at `rumored_location`, showing `rumored_description`.
 - **`known`** — appears in the player view at `true_location`, showing `player_description`.
 
-The GM view always shows every point of interest at its true location with the GM description, plus an indication of its current state.
+The GM view always shows every point of interest at its true location with the GM description, plus an indication of its current state. Icons and labels are drawn by state exactly as in the player view, so `rumored` points look dimmer there too, and `gm-only` points are tinted light blue.
 
 ### Cascade
 
@@ -125,7 +125,7 @@ Must work well on a phone. For some players, this may be the only device they us
 
 The player build serves the same `points_of_interest.json` as the GM build. The player view's JavaScript skips `gm-only` points of interest and applies the cascade to choose each remaining point's location and description. GM data is present in the JSON but never displayed (see Access control).
 
-Display of POIs: the icon is centered at the location (`rumored_location` or `true_location`), the name floats nearby. The user can interact to display the longer description. (How that interaction works may vary based on things like touch vs mouse.)
+Display of POIs: the icon is centered at the location (`rumored_location` or `true_location`), the name floats nearby. Points in the `rumored` state are drawn slightly differently from `known` ones: the icon's white field and the name label's background darken to a light grey, so players can tell hearsay from what they have seen. The user can interact to display the longer description. (How that interaction works may vary based on things like touch vs mouse.)
 
 ### GM view
 

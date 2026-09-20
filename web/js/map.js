@@ -254,22 +254,25 @@
   const VIEW = document.documentElement.dataset.view;
 
   // Resolves the location/description cascade for this view. Returns null if
-  // the POI isn't shown in this view.
+  // the POI isn't shown in this view. The state ("known", "rumored" or, in the
+  // GM view, "gm-only") decides how the icon and label are drawn.
   function resolvePoi(poi) {
     if (VIEW === "gm") {
-      return { location: poi.true_location, description: poi.gm_description };
+      // The GM view shows every POI at its true location with the GM text.
+      return { location: poi.true_location, description: poi.gm_description, state: poi.state };
     }
     const playerDescription = poi.player_description ?? poi.gm_description;
     switch (poi.state) {
       case "known":
-        return { location: poi.true_location, description: playerDescription };
+        return { location: poi.true_location, description: playerDescription, state: "known" };
       case "rumored":
         return {
           location: poi.rumored_location ?? poi.true_location,
           description: poi.rumored_description ?? playerDescription,
+          state: "rumored",
         };
       default:
-        return null;
+        return null; // gm-only: not shown to players
     }
   }
 
@@ -290,13 +293,17 @@
     });
 
     // Opens the box for a POI, or closes it if already open for that POI.
-    return function toggle(id, latLng, text) {
+    // The state class on the content lets CSS label it, such as the player
+    // view's "Rumored:" heading. The content is rebuilt on every open, so the
+    // class can never be left over from the previous POI.
+    return function toggle(id, latLng, text, state) {
       if (openId === id) {
         map.closeTooltip(box);
         openId = null;
         return;
       }
       const content = document.createElement("div");
+      content.className = `poi-${state}`;
       content.textContent = text;
       box.setContent(content);
       map.openTooltip(box, latLng);
@@ -319,24 +326,25 @@
         iconSize: [ICON_SIZE, ICON_SIZE],
         iconAnchor: [ICON_SIZE / 2, ICON_SIZE / 2],
         tooltipAnchor: [0, ICON_SIZE / 2], // bottom edge of the icon
-        className: "poi-icon",
+        className: `poi-icon poi-${resolved.state}`,
       });
       const latLng = toLatLng(resolved.location);
-      L.marker(latLng, { icon, alt: poi.name })
+      const alt = resolved.state === "known" ? poi.name : `${poi.name} (${resolved.state})`;
+      L.marker(latLng, { icon, alt })
         .on("click", (e) => {
           if (copyTool && copyTool.isActive()) {
             // Leaflet reports a marker click at the marker's own position, so
             // take the real click point from the browser event.
             copyTool.copy(map.mouseEventToLatLng(e.originalEvent));
           } else {
-            toggleDescription(poi.id, latLng, resolved.description);
+            toggleDescription(poi.id, latLng, resolved.description, resolved.state);
           }
         })
         .bindTooltip(poi.name, {
           permanent: true,
           direction: "bottom",
           offset: [0, 2],
-          className: "poi-label",
+          className: `poi-label poi-${resolved.state}`,
         })
         .addTo(map);
     }

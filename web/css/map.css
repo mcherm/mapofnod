@@ -19,6 +19,39 @@ html, body, #map {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
+/* Player view only: a rumored POI's description is headed "Rumored:". This is
+   generated content, so it can't be selected with the description text, and
+   the rule simply never matches in the GM view. */
+html[data-view="player"] .poi-description .poi-rumored::before {
+  content: "Rumored:";
+  display: block;
+  font-weight: bold;
+}
+
+/* Rumored POIs are drawn dimmer than known ones: the icon's white field
+   darkens to light grey (the black glyph and frame are unaffected by
+   brightness) and the name label takes the same grey. */
+.poi-icon.poi-rumored {
+  filter: brightness(0.85);
+}
+
+.leaflet-tooltip.poi-label.poi-rumored {
+  background: rgba(217, 217, 217, 0.85);
+  font-style: italic;
+}
+
+/* GM view only: gm-only POIs are tinted light blue. brightness() alone can't
+   add color and hue-rotate does nothing to white, so the white field is first
+   darkened, turned cream by sepia, rotated to blue and lightened again. The
+   black glyph and frame stay black throughout. White ends up #bad0ff. */
+.poi-icon.poi-gm-only {
+  filter: brightness(0.45) sepia(1) hue-rotate(190deg) saturate(1.6) brightness(1.5);
+}
+
+.leaflet-tooltip.poi-label.poi-gm-only {
+  background: rgba(186, 208, 255, 0.85);
+}
+
 /* Name label beside each POI icon (a permanent Leaflet tooltip). */
 .leaflet-tooltip.poi-label {
   padding: 1px 5px;
