@@ -62,7 +62,7 @@ one character per column (`V` visited, `.` not); unvisited hexes are shaded.
 ## Rules
 
 - **Don't commit.** Version control is jujutsu (colocated with git). The human reviews and commits all changes.
-- **Never display GM data in the player view.** It's in the JSON, but the player page must not show `gm-only`
+- **Never display GM data in the player view.** It's in the JSON, but the player page must not show `unknown`
   points of interest, `gm_description` text, or true locations of rumored points.
 - **Load data at runtime.** The front end fetches its data as JSON over HTTP rather than importing it at
   build time.

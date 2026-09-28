@@ -1,14 +1,14 @@
 {
   "map": {
-    "image": "region.jpg",
-    "width": 4000,
-    "height": 3000,
-    "origin": [2000, 1500]
+    "image": "village_of_nod.jpg",
+    "width": 3014,
+    "height": 2368,
+    "origin": [1243, 1600]
   },
   "hexes": {
     "size": 64,
-    "origin": [-1920, -1441.07],
-    "cols": 40,
-    "rows": 26
+    "origin": [-1245, -1601],
+    "cols": 32,
+    "rows": 22
   }
 }

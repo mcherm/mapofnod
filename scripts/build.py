@@ -27,7 +27,7 @@ REQUIRED_FIELDS = ["id", "name", "icon", "true_location", "gm_description", "sta
 # (such as "player_descripton") would otherwise fall back through the cascade
 # and show the GM description to players.
 OPTIONAL_FIELDS = ["rumored_location", "player_description", "rumored_description"]
-STATES = ["gm-only", "rumored", "known"]
+STATES = ["unknown", "rumored", "known"]
 
 
 def validate_pois() -> None:

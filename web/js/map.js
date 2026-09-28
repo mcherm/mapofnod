@@ -255,7 +255,7 @@
 
   // Resolves the location/description cascade for this view. Returns null if
   // the POI isn't shown in this view. The state ("known", "rumored" or, in the
-  // GM view, "gm-only") decides how the icon and label are drawn.
+  // GM view, "unknown") decides how the icon and label are drawn.
   function resolvePoi(poi) {
     if (VIEW === "gm") {
       // The GM view shows every POI at its true location with the GM text.
@@ -272,7 +272,7 @@
           state: "rumored",
         };
       default:
-        return null; // gm-only: not shown to players
+        return null; // unknown: not shown to players
     }
   }
 

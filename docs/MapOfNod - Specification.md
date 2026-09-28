@@ -49,7 +49,7 @@ A static site. No server, no database, no runtime. (At least for now -- that cou
 
 **Adjustable views:** simple changes to the display (like toggling the hex overlay on and off or switching to the player view when logged in as the gm) will be performed with controls on the page.
 
-**Access control:** two URLs. The player build at a public URL; the GM build at a separate unlisted URL. No login in v1. Anyone with the GM link sees everything, which is an accepted risk for a home game. GM data is not hidden from players either: the player site serves the same config files, so a player who opens the raw JSON can read GM-only points of interest and GM descriptions. This is also an accepted risk; the player view simply doesn't display them.
+**Access control:** two URLs. The player build at a public URL; the GM build at a separate unlisted URL. No login in v1. Anyone with the GM link sees everything, which is an accepted risk for a home game. GM data is not hidden from players either: the player site serves the same config files, so a player who opens the raw JSON can read unknown points of interest and GM descriptions. This is also an accepted risk; the player view simply doesn't display them.
 
 ## Base map and hex layer
 
@@ -95,17 +95,17 @@ A point of interest renders as an icon at a location, with a short name as a lab
 | `gm_description`      | yes      | Longer text giving the full truth                            |
 | `player_description`  | no       | Longer text which defaults to `gm_description` if absent     |
 | `rumored_description` | no       | Longer text which detaults to `player_description` if absent |
-| `state`               | yes      | `gm-only`, `rumored` or `known`                              |
+| `state`               | yes      | `unknown`, `rumored` or `known`                              |
 
 Any other field is a build error. This guards against a misspelled optional field silently falling back to `gm_description` and showing GM text to players.
 
 ### States
 
-- **`gm-only`** — absent from the player view entirely.
+- **`unknown`** — absent from the player view entirely.
 - **`rumored`** — appears in the player view at `rumored_location`, showing `rumored_description`.
 - **`known`** — appears in the player view at `true_location`, showing `player_description`.
 
-The GM view always shows every point of interest at its true location with the GM description, plus an indication of its current state. Icons and labels are drawn by state exactly as in the player view, so `rumored` points look dimmer there too, and `gm-only` points are tinted light blue.
+The GM view always shows every point of interest at its true location with the GM description, plus an indication of its current state. Icons and labels are drawn by state exactly as in the player view, so `rumored` points look dimmer there too, and `unknown` points are tinted light blue.
 
 ### Cascade
 
@@ -123,7 +123,7 @@ Public URL. Shows the background, the toggleable hex overlay with visited shadin
 
 Must work well on a phone. For some players, this may be the only device they use. Others might use a tablet or laptop browser.
 
-The player build serves the same `points_of_interest.json` as the GM build. The player view's JavaScript skips `gm-only` points of interest and applies the cascade to choose each remaining point's location and description. GM data is present in the JSON but never displayed (see Access control).
+The player build serves the same `points_of_interest.json` as the GM build. The player view's JavaScript skips `unknown` points of interest and applies the cascade to choose each remaining point's location and description. GM data is present in the JSON but never displayed (see Access control).
 
 Display of POIs: the icon is centered at the location (`rumored_location` or `true_location`), the name floats nearby. Points in the `rumored` state are drawn slightly differently from `known` ones: the icon's white field and the name label's background darken to a light grey, so players can tell hearsay from what they have seen. The user can interact to display the longer description. (How that interaction works may vary based on things like touch vs mouse.)
 
@@ -144,7 +144,7 @@ A small number of files in the repo, hand-edited. One contains layout data; one 
 ```json
 {
   "map": {
-    "image": "region.jpg",
+    "image": "village_of_nod.jpg",
     "width": 4000,
     "height": 3000,
     "origin": [2000, 1500]

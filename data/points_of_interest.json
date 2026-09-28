@@ -6,80 +6,127 @@
       "icon": "village.svg",
       "true_location": [0, 0],
       "rumored_location": [0, 0],
-      "gm_description": "Home base for the party: the village of Nod.",
+      "gm_description": "Home base for the party: the village of Nod. Main exports: hard cider, mushrooms, potatoes, and the proceeds of adventuring.",
       "state": "known"
     },
     {
-      "id": "vaskal-tower",
-      "name": "Vaskal's Observatory",
-      "icon": "watchtower.svg",
-      "true_location": [750, -600],
-      "rumored_location": [450, -500],
-      "gm_description": "A slender stone tower on the ridge. Vaskal is not dead. The upper floor is sealed by a fixed object spell.",
-      "player_description": "A slender stone tower on the ridge, its upper windows shuttered.",
-      "rumored_description": "Charcoal burners speak of a burnt tower somewhere east of the ford.",
+      "id": "manchester",
+      "name": "Manchester",
+      "icon": "medieval-village-01.svg",
+      "true_location": [-1061, -553],
+      "gm_description": "The city of Manchester. A den of sin and inequity. Guarded by Manchester United.",
+      "state": "known"
+    },
+    {
+      "id": "fey_gate",
+      "name": "Fey Entrance",
+      "icon": "mushrooms.svg",
+      "true_location": [164, -46],
+      "gm_description": "The entrance to the Fey realms. Friendly, for the most part (but still can be dangerous).",
+      "state": "known"
+    },
+    {
+      "id": "graveyard",
+      "name": "The Great Graveyard",
+      "icon": "graveyard.svg",
+      "true_location": [2, -215],
+      "player_description": "A very pleasant place for walks, this cemetery not far from town always seems to go just a bit further back.",
+      "gm_description": "This graveyard is actually nearly infinite: it warps space as you go further back. It has a pet cemetery near the front. The wizard who created it is still inside in suspended animation. It has magic to suppress the undead, which is powered by a block of mithril.",
+      "state": "known"
+    },
+    {
+      "id": "waterfall",
+      "name": "Brandywine Waterfall",
+      "icon": "waterfall.svg",
+      "true_location": [357, -766],
+      "rumored_location": [404, -564],
+      "rumored_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, plus there are said to be caves behind it.",
+      "gm_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, a permanent rainbow, plus has caves behind it.",
       "state": "rumored"
     },
     {
-      "id": "deepcut-mines",
-      "name": "Deepcut Mines",
-      "icon": "gold-mine.svg",
-      "true_location": [1500, -750],
-      "gm_description": "An abandoned diamond mine.",
-      "state": "known"
-    },
-    {
-      "id": "oakhollow",
-      "name": "Oakhollow",
-      "icon": "village.svg",
-      "true_location": [-900, 400],
-      "gm_description": "A farming village of about two hundred souls, and the party's home base. The reeve, Marta Kell, is quietly paying tribute to the bandits in the southern wood.",
-      "player_description": "A farming village of about two hundred souls, and the party's home base.",
-      "state": "known"
-    },
-    {
-      "id": "greywatch-light",
-      "name": "Greywatch Light",
-      "icon": "lighthouse.svg",
-      "true_location": [-1300, -400],
-      "gm_description": "A lighthouse on the sea cliffs, kept by old Tobin and his three cats. Its lamp has not failed in forty years.",
-      "state": "known"
-    },
-    {
-      "id": "drowned-shrine",
-      "name": "The Drowned Shrine",
-      "icon": "greek-temple.svg",
-      "true_location": [800, 380],
-      "gm_description": "A marble shrine to a forgotten sea god, half sunk in the lake shallows. Its priests still wait below the water.",
-      "player_description": "A marble shrine half sunk in the lake shallows, its steps slick with weed.",
-      "rumored_description": "Fishermen won't cast their nets near the north shore of Mirror Lake. They say something old sleeps there.",
+      "id": "cloud-island",
+      "name": "Cloud Island",
+      "icon": "sun-cloud.svg",
+      "true_location": [582, -1046],
+      "rumored_description": "Supposedly there's a spot near here where one can step directly into the clouds and walk across them.",
+      "gm_description": "Cloud Giants live in Cloud Island.",
       "state": "rumored"
     },
     {
-      "id": "witch-house",
-      "name": "Mother Gribble's House",
-      "icon": "spooky-house.svg",
-      "true_location": [-700, -600],
-      "gm_description": "A crooked house deep in the Old Wood. Mother Gribble trades cures for secrets, and her prices go up with every visit.",
-      "state": "gm-only"
+      "id": "cliffs-of-insanity",
+      "name": "The Cliffs of Insanity",
+      "icon": "crags.svg",
+      "true_location": [1187, -1012],
+      "rumored_description": "The Cliffs of Insanity are rumored to block the way to the Great Plateau.",
+      "gm_description": "I don't have a plan for this yet.",
+      "state": "rumored"
     },
     {
-      "id": "weeping-stone",
-      "name": "The Weeping Stone",
-      "icon": "menhir.svg",
-      "true_location": [-500, 1200],
-      "rumored_location": [-300, 1150],
-      "gm_description": "A lone standing stone among the southern hills. Its runes mark the way into a barrow beneath it.",
-      "rumored_description": "Shepherds tell of a standing stone in the southern hills that weeps on moonless nights.",
+      "id": "hydra",
+      "name": "Hydra",
+      "icon": "hydra.svg",
+      "rumored_location": [-491, -1019],
+      "true_location": [-663, -1160],
+      "rumored_description": "A terrifying beast at the heart of Deepglow Swamp.",
+      "gm_description": "A truly dangerous creature with huge treasure, but it mostly just stays put.",
+      "state": "rumored"
+    },
+    {
+      "id": "elephant-graveyard",
+      "name": "Elephant Graveyard",
+      "icon": "elephant.svg",
+      "rumored_location": [1258, -154],
+      "true_location": [1450, 65],
+      "rumored_description": "An elephant graveyard deep in the jungle.",
+      "gm_description": "No GM plans yet. Lots of ivory as treasure.",
+      "state": "rumored"
+    },
+    {
+      "id": "kraken",
+      "name": "Brandywine Kraken",
+      "icon": "kraken-tentacle.svg",
+      "true_location": [-750, -400],
+      "rumored_description": "Stories tell of a Kraken in the Brandywine river. That doesn't make sense, does it?.",
+      "gm_description": "Nope. It isn't real.",
+      "state": "rumored"
+    },
+    {
+      "id": "fallen-castle",
+      "name": "Fallen Castle",
+      "icon": "castle-lorc.svg",
+      "rumored_location": [3, -770],
+      "true_location": [7, -985],
+      "rumored_description": "A flying castle is supposed to have crashed into the side of the mountain range.",
+      "gm_description": "The flying castle is from a powerful ancient civilization. The whole area around it is subject to \"radiation\", which changes the monsters.",
+      "state": "rumored"
+    },
+    {
+      "id": "giant-boar",
+      "name": "Wild Giant Boar",
+      "icon": "boar.svg",
+      "true_location": [-182, 341],
+      "gm_description": "The best area to hunt wild giant boar.",
+      "state": "rumored"
+    },
+    {
+      "id": "roc",
+      "name": "Roc",
+      "icon": "eagle-head.svg",
+      "true_location": [289, -1275],
+      "rumored_description": "They say it hunts elephants...",
+      "gm_description": "Top predator.",
       "state": "rumored"
     },
     {
       "id": "red-hand-camp",
-      "name": "Red Hand Camp",
+      "name": "Red Hand Bandit Camp",
       "icon": "forest-camp.svg",
-      "true_location": [1300, 1100],
-      "gm_description": "The Red Hand bandits' hidden camp: a dozen cutthroats under a one-eyed captain named Sorrel.",
-      "state": "gm-only"
+      "rumored_location": [-767, -49],
+      "true_location": [-780, -261],
+      "rumored_description": "The hidden camp of the Red Hand Bandits, a band of cuthroats under a one-eyed captain named \"Anastasia\".",
+      "gm_description": "The Red Hand bandits' hidden camp: a dozen cutthroats under a one-eyed captain named named \"Anastasia\". They prey on river traffic.",
+      "state": "rumored"
     }
   ]
 }
