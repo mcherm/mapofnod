@@ -29,8 +29,8 @@
       "id": "graveyard",
       "name": "The Great Graveyard",
       "icon": "graveyard.svg",
-      "true_location": [2, -215],
-      "player_description": "A very pleasant place for walks, this cemetery not far from town always seems to go just a bit further back.",
+      "true_location": [3, -181],
+      "player_description": "A very pleasant place for walks, this cemetery not far from town always seems to go just a bit further back. Be sure to place a silver ingot on any gravestone (but not TOO pure, for some reason).",
       "gm_description": "This graveyard is actually nearly infinite: it warps space as you go further back. It has a pet cemetery near the front. The wizard who created it is still inside in suspended animation. It has magic to suppress the undead, which is powered by a block of mithril.",
       "state": "known"
     },
