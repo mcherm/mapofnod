@@ -131,9 +131,10 @@ Display of POIs: the icon is centered at the location (`rumored_location` or `tr
 
 Separate unlisted URL. Shows everything at true locations with GM descriptions, plus each point of interest's current state.
 
-Two GM-only affordances:
+Three GM-only affordances:
 
 - **Coordinate display.** A mode that labels each hex with its x/y coordinates, so the visited list can be updated by visual inspection.
+- **Rumor mode.** A toggle that shows what the players believe about `rumored` points of interest. Each one also appears at its `rumored_location` (when that differs from `true_location`) as a second icon with a dashed, faded border and no label, which does nothing when clicked; and its description gives "Rumored:" with the players' text, then a rule, then the GM description.
 - **Click to copy.** Clicking a hex copies its coordinate string to the clipboard; clicking the map copies the pixel position. This removes most of the friction of having no drag editor, and eliminates the transcription errors that come from reading a label and retyping it.
 
 ## Config file

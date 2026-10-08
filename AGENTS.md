@@ -48,8 +48,13 @@ display it.
 
 ## GM view
 
-The GM view (`/gm/`) has a crosshair "copy location" button below the hex toggle. While it is on, clicking the
-map copies that spot as an `[x, y]` map coordinate, ready to paste into `data/points_of_interest.json`.
+The GM view (`/gm/`) has a speech-bubble "rumors" button below the hex toggle. While it is on, each `rumored`
+point of interest also gets a second, dashed icon (no label, not clickable) at its `rumored_location`, unless that
+is the true location, and its description shows "Rumored:" and the text the players see, a rule, then
+`gm_description`.
+
+Below that is a crosshair "copy location" button. While it is on, clicking the map copies that spot as an
+`[x, y]` map coordinate, ready to paste into `data/points_of_interest.json`.
 
 ## Hex coordinates
 

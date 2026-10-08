@@ -52,6 +52,14 @@ html[data-view="player"] .poi-description .poi-rumored::before {
   background: rgba(186, 208, 255, 0.85);
 }
 
+/* GM rumor mode: the second icon, where the players think a rumored POI is,
+   is drawn like a rumored one but with a dashed border and faded, so it
+   can't be mistaken for the real thing. */
+.poi-icon.poi-rumor {
+  border-style: dashed;
+  opacity: 0.75;
+}
+
 /* Name label beside each POI icon (a permanent Leaflet tooltip). */
 .leaflet-tooltip.poi-label {
   padding: 1px 5px;
@@ -81,6 +89,18 @@ html[data-view="player"] .poi-description .poi-rumored::before {
   user-select: text;
 }
 
+/* GM rumor mode: a rumored POI's description gives the rumor, a rule, then
+   the truth. */
+.poi-description .rumor-heading {
+  font-weight: bold;
+}
+
+.poi-description hr {
+  margin: 6px 0;
+  border: none;
+  border-top: 1px solid #999;
+}
+
 /* Hex grid on/off button, below the zoom buttons. */
 .hex-toggle svg {
   width: 18px;
@@ -92,6 +112,21 @@ html[data-view="player"] .poi-description .poi-rumored::before {
 }
 
 .hex-toggle.off svg {
+  stroke: #aaa;
+}
+
+/* GM rumor mode on/off button: a speech bubble. */
+.rumor-toggle svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.rumor-toggle.off svg {
   stroke: #aaa;
 }
 

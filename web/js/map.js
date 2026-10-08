@@ -256,19 +256,31 @@
   // Resolves the location/description cascade for this view. Returns null if
   // the POI isn't shown in this view. The state ("known", "rumored" or, in the
   // GM view, "unknown") decides how the icon and label are drawn.
-  function resolvePoi(poi) {
+  //
+  // showRumors is the GM view's rumor toggle. While it is on, a rumored POI
+  // also gets a rumor: { location, description }, what the players see. The
+  // location is null when the rumor puts the POI at its true location.
+  function resolvePoi(poi, showRumors) {
+    const playerDescription = poi.player_description ?? poi.gm_description;
+    const rumoredDescription = poi.rumored_description ?? playerDescription;
     if (VIEW === "gm") {
       // The GM view shows every POI at its true location with the GM text.
-      return { location: poi.true_location, description: poi.gm_description, state: poi.state };
+      const resolved = { location: poi.true_location, description: poi.gm_description, state: poi.state };
+      if (showRumors && poi.state === "rumored") {
+        const rumoredLocation = poi.rumored_location ?? poi.true_location;
+        const moved =
+          rumoredLocation[0] !== poi.true_location[0] || rumoredLocation[1] !== poi.true_location[1];
+        resolved.rumor = { location: moved ? rumoredLocation : null, description: rumoredDescription };
+      }
+      return resolved;
     }
-    const playerDescription = poi.player_description ?? poi.gm_description;
     switch (poi.state) {
       case "known":
         return { location: poi.true_location, description: playerDescription, state: "known" };
       case "rumored":
         return {
           location: poi.rumored_location ?? poi.true_location,
-          description: poi.rumored_description ?? playerDescription,
+          description: rumoredDescription,
           state: "rumored",
         };
       default:
@@ -287,57 +299,75 @@
       className: "poi-description",
     });
     let openId = null;
-    map.on("click", () => {
+    const close = () => {
       map.closeTooltip(box);
       openId = null;
-    });
+    };
+    map.on("click", close);
 
     // Opens the box for a POI, or closes it if already open for that POI.
     // The state class on the content lets CSS label it, such as the player
     // view's "Rumored:" heading. The content is rebuilt on every open, so the
     // class can never be left over from the previous POI.
-    return function toggle(id, latLng, text, state) {
+    function toggle(id, latLng, resolved) {
       if (openId === id) {
-        map.closeTooltip(box);
-        openId = null;
+        close();
         return;
       }
       const content = document.createElement("div");
-      content.className = `poi-${state}`;
-      content.textContent = text;
+      content.className = `poi-${resolved.state}`;
+      if (resolved.rumor) {
+        // GM rumor mode: what the players have heard, then the truth.
+        const heading = document.createElement("div");
+        heading.className = "rumor-heading";
+        heading.textContent = "Rumored:";
+        const rumor = document.createElement("div");
+        rumor.textContent = resolved.rumor.description;
+        const truth = document.createElement("div");
+        truth.textContent = resolved.description;
+        content.append(heading, rumor, document.createElement("hr"), truth);
+      } else {
+        content.textContent = resolved.description;
+      }
       box.setContent(content);
       map.openTooltip(box, latLng);
       // As Leaflet does for popups; otherwise the map sees the click and closes it.
       L.DomEvent.disableClickPropagation(box.getElement());
       openId = id;
-    };
+    }
+
+    return { toggle, close };
   }
 
-  // copyTool is null in the player view.
+  // Draws the POIs in their own layer. copyTool is null in the player view.
+  // Returns render(showRumors), which redraws them for the GM view's rumor
+  // toggle; it has already been called once with rumors off.
   function addPois(map, pois, copyTool) {
-    const toggleDescription = descriptionBox(map);
-    for (const poi of pois) {
-      const resolved = resolvePoi(poi);
-      if (resolved === null) {
-        continue;
-      }
-      const icon = L.icon({
+    const description = descriptionBox(map);
+    const layer = L.layerGroup().addTo(map);
+
+    function poiIcon(poi, state, extraClass) {
+      return L.icon({
         iconUrl: "icons/" + poi.icon,
         iconSize: [ICON_SIZE, ICON_SIZE],
         iconAnchor: [ICON_SIZE / 2, ICON_SIZE / 2],
         tooltipAnchor: [0, ICON_SIZE / 2], // bottom edge of the icon
-        className: `poi-icon poi-${resolved.state}`,
+        className: `poi-icon poi-${state} ${extraClass}`,
       });
+    }
+
+    // A POI's icon with its name label, which opens its description.
+    function addMarker(poi, resolved) {
       const latLng = toLatLng(resolved.location);
       const alt = resolved.state === "known" ? poi.name : `${poi.name} (${resolved.state})`;
-      L.marker(latLng, { icon, alt })
+      L.marker(latLng, { icon: poiIcon(poi, resolved.state, ""), alt })
         .on("click", (e) => {
           if (copyTool && copyTool.isActive()) {
             // Leaflet reports a marker click at the marker's own position, so
             // take the real click point from the browser event.
             copyTool.copy(map.mouseEventToLatLng(e.originalEvent));
           } else {
-            toggleDescription(poi.id, latLng, resolved.description, resolved.state);
+            description.toggle(poi.id, latLng, resolved);
           }
         })
         .bindTooltip(poi.name, {
@@ -346,8 +376,64 @@
           offset: [0, 2],
           className: `poi-label poi-${resolved.state}`,
         })
-        .addTo(map);
+        .addTo(layer);
     }
+
+    // GM rumor mode: a second icon where the players think the POI is. It has
+    // no label and isn't interactive, so clicks on it go to the map.
+    function addRumorMarker(poi, location) {
+      L.marker(toLatLng(location), {
+        icon: poiIcon(poi, "rumored", "poi-rumor"),
+        alt: `${poi.name} (rumored location)`,
+        interactive: false,
+        keyboard: false,
+      }).addTo(layer);
+    }
+
+    function render(showRumors) {
+      description.close();
+      layer.clearLayers();
+      for (const poi of pois) {
+        const resolved = resolvePoi(poi, showRumors);
+        if (resolved === null) {
+          continue;
+        }
+        addMarker(poi, resolved);
+        if (resolved.rumor && resolved.rumor.location) {
+          addRumorMarker(poi, resolved.rumor.location);
+        }
+      }
+    }
+
+    render(false);
+    return render;
+  }
+
+  // GM only: a speech-bubble button, below the hex toggle, that turns rumor
+  // mode on and off. While it is on, each rumored POI also appears where the
+  // players think it is, and its description shows the rumor above the truth.
+  // onChange(on) is called with the new setting.
+  function addRumorToggle(map, onChange) {
+    let on = false;
+    const update = (button) => {
+      button.classList.toggle("off", !on);
+      button.setAttribute("aria-pressed", String(on));
+    };
+    const control = new ButtonControl({
+      position: "topleft",
+      className: "rumor-toggle",
+      title: "Show or hide what the players have heard about rumored places",
+      label: "Rumors",
+      svg:
+        '<svg viewBox="0 0 20 20" aria-hidden="true">' +
+        '<path d="M3 4h14v9H9l-4 3.5V13H3z" /></svg>',
+      onClick(button) {
+        on = !on;
+        onChange(on);
+        update(button);
+      },
+    }).addTo(map);
+    update(control.getContainer().firstChild);
   }
 
   function fetchFile(url) {
@@ -368,9 +454,16 @@
       const map = buildMap(config);
       const grid = hexGrid(config.hexes, parseVisited(visitedText));
       addHexToggle(map, grid);
+      // Controls stack in the order they are added, but the rumor toggle
+      // needs renderPois, which needs the copy tool added after it. Nothing
+      // can be clicked until this function returns, so it is set in time.
+      let renderPois;
+      if (VIEW === "gm") {
+        addRumorToggle(map, (on) => renderPois(on));
+      }
       const copyTool = VIEW === "gm" ? addCopyLocationTool(map) : null;
       addAboutMenu(map);
-      addPois(map, poiData.pois, copyTool);
+      renderPois = addPois(map, poiData.pois, copyTool);
     })
     .catch((err) => showError(`Could not load the map: ${err.message}`));
 })();
