@@ -127,6 +127,66 @@
       "rumored_description": "The hidden camp of the Red Hand Bandits, a band of cuthroats under a one-eyed captain named \"Anastasia\".",
       "gm_description": "The Red Hand bandits' hidden camp: a dozen cutthroats under a one-eyed captain named named \"Anastasia\". They prey on river traffic.",
       "state": "rumored"
+    },
+    {
+      "id": "mushroom-folk",
+      "name": "Mushroomfolk",
+      "icon": "mushroom.svg",
+      "rumored_location": [-377, 211],
+      "true_location": [-377, 211],
+      "rumored_description": "This is the area where you've been told the mushroomfolk are to be found.",
+      "gm_description": "Town of Mushroomfolk.",
+      "state": "unknown"
+    },
+    {
+      "id": "giant-frog-1",
+      "name": "Giant Frog",
+      "icon": "frog.svg",
+      "true_location": [-280, -491],
+      "gm_description": "Location for some giant frogs.",
+      "state": "unknown"
+    },
+    {
+      "id": "giant-frog-2",
+      "name": "Giant Frog",
+      "icon": "frog.svg",
+      "true_location": [170, 128],
+      "gm_description": "Location for some giant frogs.",
+      "state": "unknown"
+    },
+    {
+      "id": "mushroom-folk-runaways",
+      "name": "Mushroomfolk Runaways",
+      "icon": "mushroom.svg",
+      "true_location": [-185, 214],
+      "player_description": "A ragtag gang of mushroomfolk.",
+      "gm_description": "A group of teenaged mushroomfolk running away from home.",
+      "state": "unknown"
+    },
+    {
+      "id": "orc-scouts",
+      "name": "Orc Scouts",
+      "icon": "orc-head.svg",
+      "true_location": [-100, 363],
+      "player_description": "A well-prepared scouting party of Orcs.",
+      "gm_description": "Scouting party of orcs; they have maps of the area.",
+      "state": "unknown"
+    },
+    {
+      "id": "dragon-bones",
+      "name": "Dragon Bones",
+      "icon": "dinosaur-bones.svg",
+      "true_location": [760, -27],
+      "gm_description": "This is the skeleton of a dragon, killed many years ago.",
+      "state": "unknown"
+    },
+    {
+      "id": "redcaps",
+      "name": "Redcaps",
+      "icon": "bad-gnome.svg",
+      "true_location": [162, 33],
+      "gm_description": "Redcaps are the most aggressive of the Fey. But they like apple cider.",
+      "state": "unknown"
     }
   ]
 }
