@@ -187,6 +187,16 @@
       "true_location": [162, 33],
       "gm_description": "Redcaps are the most aggressive of the Fey. But they like apple cider.",
       "state": "unknown"
+    },
+    {
+      "id": "landomar",
+      "name": "Underground City of Landomar",
+      "icon": "crypt-entrance.svg",
+      "rumored_location": [1055, 503],
+      "true_location": [773, 557],
+      "rumored_description": "The city that Tennova, the Bone Naga spoke of. Has survived multiple cycles.",
+      "gm_description": "A mid to high level area; 6th level creatures.",
+      "state": "unknown"
     }
   ]
 }
