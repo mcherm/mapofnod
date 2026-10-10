@@ -266,7 +266,7 @@
     if (VIEW === "gm") {
       // The GM view shows every POI at its true location with the GM text.
       const resolved = { location: poi.true_location, description: poi.gm_description, state: poi.state };
-      if (showRumors && poi.state === "rumored") {
+      if (showRumors && (poi.state === "rumored" || poi.state === "unknown")) {
         const rumoredLocation = poi.rumored_location ?? poi.true_location;
         const moved =
           rumoredLocation[0] !== poi.true_location[0] || rumoredLocation[1] !== poi.true_location[1];
