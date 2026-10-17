@@ -105,9 +105,9 @@
       "id": "giant-boar",
       "name": "Wild Giant Boar",
       "icon": "boar.svg",
-      "true_location": [-182, 341],
+      "true_location": [-195, 332],
       "gm_description": "The best area to hunt wild giant boar.",
-      "state": "rumored"
+      "state": "known"
     },
     {
       "id": "roc",
@@ -132,11 +132,10 @@
       "id": "mushroom-folk",
       "name": "Mushroomfolk",
       "icon": "mushroom.svg",
-      "rumored_location": [-377, 211],
-      "true_location": [-377, 211],
+      "true_location": [-552, 340],
       "rumored_description": "This is the area where you've been told the mushroomfolk are to be found.",
       "gm_description": "Town of Mushroomfolk.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "giant-frog-1",
@@ -158,10 +157,10 @@
       "id": "mushroom-folk-runaways",
       "name": "Mushroomfolk Runaways",
       "icon": "mushroom.svg",
-      "true_location": [-185, 214],
-      "player_description": "A ragtag gang of mushroomfolk.",
+      "true_location": [-190, 260],
+      "player_description": "A ragtag gang of teenaged mushroomfolk.",
       "gm_description": "A group of teenaged mushroomfolk running away from home.",
-      "state": "unknown"
+      "state": "known"
     },
     {
       "id": "orc-scouts",
@@ -186,7 +185,7 @@
       "icon": "bad-gnome.svg",
       "true_location": [162, 33],
       "gm_description": "Redcaps are the most aggressive of the Fey. But they like apple cider.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "landomar",
@@ -196,6 +195,15 @@
       "true_location": [773, 557],
       "rumored_description": "The city that Tennova, the Bone Naga spoke of. Has survived multiple cycles.",
       "gm_description": "A mid to high level area; 6th level creatures.",
+      "state": "rumored"
+    },
+    {
+      "id": "lizardfolk",
+      "name": "Lizardfolk Colony",
+      "icon": "huts-village.svg",
+      "true_location": [-474, -718],
+      "rumored_description": "The mushroomfolk claimed lizardfolk were located near here.",
+      "gm_description": "An aggressive colony of lizardfolk; will kill demihumans and feast on them.",
       "state": "rumored"
     }
   ]
