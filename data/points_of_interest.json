@@ -205,6 +205,16 @@
       "rumored_description": "The mushroomfolk claimed lizardfolk were located near here.",
       "gm_description": "An aggressive colony of lizardfolk; will kill demihumans and feast on them.",
       "state": "rumored"
+    },
+    {
+      "id": "crystal-cave",
+      "name": "Crystal Cave",
+      "icon": "cave-entrance.svg",
+      "rumored_location": [94, -415],
+      "true_location": [111, -494],
+      "rumored_description": "The Orcs' notes referenced a \"Crystal Cave\".",
+      "gm_description": "It is a dungeon with traps and monsters. But at the bottom is a chamber with pools. Bathing in one gives +4 / +2 / +2 to 3 stats of your choice for 5 days.",
+      "state": "unknown"
     }
   ]
 }
