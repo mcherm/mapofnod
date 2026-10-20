@@ -166,7 +166,7 @@
       "id": "orc-scouts",
       "name": "Orc Scouts",
       "icon": "orc-head.svg",
-      "true_location": [-100, 363],
+      "true_location": [-166, 160],
       "player_description": "A well-prepared scouting party of Orcs.",
       "gm_description": "Scouting party of orcs; they have maps of the area.",
       "state": "unknown"
@@ -210,10 +210,18 @@
       "id": "crystal-cave",
       "name": "Crystal Cave",
       "icon": "cave-entrance.svg",
-      "rumored_location": [94, -415],
-      "true_location": [111, -494],
+      "true_location": [200, -582],
       "rumored_description": "The Orcs' notes referenced a \"Crystal Cave\".",
       "gm_description": "It is a dungeon with traps and monsters. But at the bottom is a chamber with pools. Bathing in one gives +4 / +2 / +2 to 3 stats of your choice for 5 days.",
+      "state": "unknown"
+    },
+    {
+      "id": "lookout-tower",
+      "name": "Lookout Tower",
+      "icon": "stone-tower.svg",
+      "true_location": [111, -494],
+      "rumored_description": "The Orcs' notes referenced an intact stone lookout tower.",
+      "gm_description": "It's a dungeon with gremlins that occupy inanimate objects.",
       "state": "unknown"
     }
   ]
