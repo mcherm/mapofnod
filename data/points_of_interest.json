@@ -223,6 +223,33 @@
       "rumored_description": "The Orcs' notes referenced an intact stone lookout tower.",
       "gm_description": "It's a dungeon with gremlins that occupy inanimate objects.",
       "state": "unknown"
+    },
+    {
+      "id": "gold-mine",
+      "name": "Undermountain Gold Mine",
+      "icon": "gold-mine.svg",
+      "true_location": [168, -1231],
+      "rumored_description": "The Orcs' notes spoke of \"Undermountain Mine\".",
+      "gm_description": "It's a gold mine that is literally on the under side of the floating mountain.",
+      "state": "unknown"
+    },
+    {
+      "id": "naiad",
+      "name": "Lake Lady",
+      "icon": "mermaid.svg",
+      "true_location": [-310, -1179],
+      "rumored_description": "The Orcs' notes referred to the \"Lake Lady\"; it isn't clear what that meant.",
+      "gm_description": "The lake has a naiad. Also a giant snail.",
+      "state": "unknown"
+    },
+    {
+      "id": "sunmouth",
+      "name": "Sunmouth",
+      "icon": "heraldic-sun.svg",
+      "true_location": [359, -1172],
+      "rumored_description": "Mentioned in the Orcs' notes.",
+      "gm_description": "This is the exit from the underdark that the Orcs are invading from, on the underside of the floating mountains.",
+      "state": "unknown"
     }
   ]
 }
