@@ -213,7 +213,7 @@
       "true_location": [200, -582],
       "rumored_description": "The Orcs' notes referenced a \"Crystal Cave\".",
       "gm_description": "It is a dungeon with traps and monsters. But at the bottom is a chamber with pools. Bathing in one gives +4 / +2 / +2 to 3 stats of your choice for 5 days.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "lookout-tower",
@@ -222,7 +222,7 @@
       "true_location": [111, -494],
       "rumored_description": "The Orcs' notes referenced an intact stone lookout tower.",
       "gm_description": "It's a dungeon with gremlins that occupy inanimate objects.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "gold-mine",
@@ -231,7 +231,7 @@
       "true_location": [168, -1231],
       "rumored_description": "The Orcs' notes spoke of \"Undermountain Mine\".",
       "gm_description": "It's a gold mine that is literally on the under side of the floating mountain.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "naiad",
@@ -240,16 +240,16 @@
       "true_location": [-310, -1179],
       "rumored_description": "The Orcs' notes referred to the \"Lake Lady\"; it isn't clear what that meant.",
       "gm_description": "The lake has a naiad. Also a giant snail.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "sunmouth",
       "name": "Sunmouth",
       "icon": "heraldic-sun.svg",
       "true_location": [359, -1172],
-      "rumored_description": "Mentioned in the Orcs' notes.",
+      "rumored_description": "Mentioned in the Orcs' notes. What is it?",
       "gm_description": "This is the exit from the underdark that the Orcs are invading from, on the underside of the floating mountains.",
-      "state": "unknown"
+      "state": "rumored"
     }
   ]
 }
