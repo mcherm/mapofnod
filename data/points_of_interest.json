@@ -39,10 +39,9 @@
       "name": "Brandywine Waterfall",
       "icon": "waterfall.svg",
       "true_location": [357, -766],
-      "rumored_location": [404, -564],
-      "rumored_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, plus there are said to be caves behind it.",
-      "gm_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, a permanent rainbow, plus has caves behind it.",
-      "state": "rumored"
+      "player_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, plus there is a cave behind it.",
+      "gm_description": "A waterfall along the Brandywine stream up in the mountains. Incredible view, a permanent rainbow, plus has a magical, multiplexed cave behind it.",
+      "state": "known"
     },
     {
       "id": "cloud-island",
@@ -250,6 +249,15 @@
       "rumored_description": "Mentioned in the Orcs' notes. What is it?",
       "gm_description": "This is the exit from the underdark that the Orcs are invading from, on the underside of the floating mountains.",
       "state": "rumored"
+    },
+    {
+      "id": "farmhouse",
+      "name": "Farmhouse",
+      "icon": "farmer.svg",
+      "true_location": [367, -343],
+      "player_description": "A farmhouse with a small garden, near the edge of the mountains. Elliot, Andrea, and Little Steven live here. The augury said visiting would be good; the mushroomfolk thought they were creepy and scary.",
+      "gm_description": "A farmhouse with a small garden, near the edge of the mountains. Farmer Elliot and his wife Andrea are actually Oni in disguise as humans. Little Steven (their 5-year old halfling son) is what he appears to be.",
+      "state": "known"
     }
   ]
 }
