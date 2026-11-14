@@ -143,7 +143,7 @@
       "icon": "frog.svg",
       "true_location": [-280, -491],
       "gm_description": "Location for some giant frogs.",
-      "state": "unknown"
+      "state": "rumored"
     },
     {
       "id": "giant-frog-2",
@@ -169,7 +169,7 @@
       "true_location": [-166, 160],
       "player_description": "A well-prepared scouting party of Orcs.",
       "gm_description": "Scouting party of orcs; they have maps of the area.",
-      "state": "unknown"
+      "state": "known"
     },
     {
       "id": "dragon-bones",
