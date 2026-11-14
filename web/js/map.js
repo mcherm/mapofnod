@@ -86,7 +86,7 @@
 
   // Builds the hex grid as SVG polygons, with unvisited hexes lightly shaded.
   // Not interactive, so clicks pass through to the map. Returns the layer
-  // without adding it: the grid starts hidden, and the hex toggle shows it.
+  // without adding it; the caller adds it, and the hex toggle hides it.
   function hexGrid(hexes, visited) {
     const grid = L.layerGroup();
     for (let col = 0; col < hexes.cols; col++) {
@@ -452,7 +452,7 @@
   ])
     .then(([config, poiData, visitedText]) => {
       const map = buildMap(config);
-      const grid = hexGrid(config.hexes, parseVisited(visitedText));
+      const grid = hexGrid(config.hexes, parseVisited(visitedText)).addTo(map);
       addHexToggle(map, grid);
       // Controls stack in the order they are added, but the rumor toggle
       // needs renderPois, which needs the copy tool added after it. Nothing
